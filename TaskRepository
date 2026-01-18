@@ -1,0 +1,67 @@
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TaskRepository {
+
+    public void addTask(Task task) {
+        String sql = "INSERT INTO tasks(worker_id, title, description, deadline, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, task.getWorkerId());
+            stmt.setString(2, task.getTitle());
+            stmt.setString(3, task.getDescription());
+            stmt.setDate(4, Date.valueOf(task.getDeadline()));
+            stmt.setString(5, task.getStatus());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTask(int id) {
+        String sql = "DELETE FROM tasks WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Task> getAllTasks() {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT * FROM tasks";
+        try (Connection conn = Database.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                tasks.add(new Task(
+                        rs.getInt("id"),
+                        rs.getInt("worker_id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDate("deadline").toLocalDate(),
+                        rs.getString("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+
+    public void updateTaskStatus(int taskId, String status) {
+        String sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, taskId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
