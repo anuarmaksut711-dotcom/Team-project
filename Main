@@ -1,0 +1,54 @@
+import java.time.LocalDate;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ReminderController controller = new ReminderController();
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n1. Show Workers\n2. Add Worker\n3. Delete Worker");
+            System.out.println("4. Show Tasks\n5. Add Task\n6. Delete Task\n7. Update Task Status\n0. Exit");
+            System.out.print("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine(); 
+
+            switch (choice) {
+                case 1 -> controller.showWorkers();
+                case 2 -> {
+                    System.out.print("Name: "); String name = sc.nextLine();
+                    System.out.print("Position: "); String pos = sc.nextLine();
+                    System.out.print("Email: "); String email = sc.nextLine();
+                    controller.addWorker(name, pos, email);
+                }
+                case 3 -> {
+                    System.out.print("Worker ID to delete: "); int id = sc.nextInt();
+                    controller.deleteWorker(id);
+                }
+                case 4 -> controller.showTasks();
+                case 5 -> {
+                    System.out.print("Worker ID: "); int wid = sc.nextInt(); sc.nextLine();
+                    System.out.print("Title: "); String title = sc.nextLine();
+                    System.out.print("Description: "); String desc = sc.nextLine();
+                    System.out.print("Deadline (YYYY-MM-DD): "); String dl = sc.nextLine();
+                    controller.addTask(wid, title, desc, LocalDate.parse(dl));
+                }
+                case 6 -> {
+                    System.out.print("Task ID to delete: "); int tid = sc.nextInt();
+                    controller.deleteTask(tid);
+                }
+                case 7 -> {
+                    System.out.print("Task ID: "); int tid = sc.nextInt(); sc.nextLine();
+                    System.out.print("New Status: "); String status = sc.nextLine();
+                    controller.updateTaskStatus(tid, status);
+                }
+                case 0 -> running = false;
+                default -> System.out.println("Invalid option!");
+            }
+        }
+
+        sc.close();
+        System.out.println("Exiting...");
+    }
+}
