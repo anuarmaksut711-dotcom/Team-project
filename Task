@@ -1,0 +1,45 @@
+import java.time.LocalDate;
+
+public class Task {
+    private int id;
+    private int workerId;
+    private String title;
+    private String description;
+    private LocalDate deadline;
+    private String status;
+
+    public Task(int id, int workerId, String title, String description, LocalDate deadline, String status) {
+        this.id = id;
+        this.workerId = workerId;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.status = status;
+    }
+
+    public Task(int workerId, String title, String description, LocalDate deadline, String status) {
+        this.workerId = workerId;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return id + ": " + title + " (Worker ID: " + workerId + ") Deadline: " + deadline + " Status: " + status;
+    }
+    
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public int getWorkerId() { return workerId; }
+    public void setWorkerId(int workerId) { this.workerId = workerId; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public LocalDate getDeadline() { return deadline; }
+    public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+}
