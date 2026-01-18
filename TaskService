@@ -1,0 +1,75 @@
+import java.sql.*;
+
+public class TaskService {
+
+    public void createTable() {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                lesson TEXT,
+                description TEXT,
+                deadline TEXT
+            )
+        """;
+
+        try (Connection c = Database.getConnection();
+             Statement s = c.createStatement()) {
+
+            s.execute(sql);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addTask(String lesson, String desc, String deadline) {
+        String sql = "INSERT INTO tasks VALUES(null, ?, ?, ?)";
+
+        try (Connection c = Database.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, lesson);
+            ps.setString(2, desc);
+            ps.setString(3, deadline);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showTasks() {
+        String sql = "SELECT * FROM tasks ORDER BY deadline";
+
+        try (Connection c = Database.getConnection();
+             Statement s = c.createStatement();
+             ResultSet rs = s.executeQuery(sql)) {
+
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("id") + " | " +
+                                rs.getString("lesson") + " | " +
+                                rs.getString("description") + " | " +
+                                rs.getString("deadline")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTask(int id) {
+        String sql = "DELETE FROM tasks WHERE id = ?";
+
+        try (Connection c = Database.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
