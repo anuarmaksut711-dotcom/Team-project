@@ -1,0 +1,50 @@
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class WorkerRepository {
+
+    public void addWorker(Worker worker) {
+        String sql = "INSERT INTO workers(name, position, email) VALUES (?, ?, ?)";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, worker.getName());
+            stmt.setString(2, worker.getPosition());
+            stmt.setString(3, worker.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteWorker(int id) {
+        String sql = "DELETE FROM workers WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Worker> getAllWorkers() {
+        List<Worker> workers = new ArrayList<>();
+        String sql = "SELECT * FROM workers";
+        try (Connection conn = Database.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                workers.add(new Worker(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("position"),
+                        rs.getString("email")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return workers;
+    }
+}
