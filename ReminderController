@@ -1,0 +1,38 @@
+import java.time.LocalDate;
+import java.util.List;
+
+public class ReminderController {
+    private final WorkerRepository workerRepo = new WorkerRepository();
+    private final TaskRepository taskRepo = new TaskRepository();
+    
+    public void addWorker(String name, String position, String email) {
+        workerRepo.addWorker(new Worker(name, position, email));
+    }
+
+    public void deleteWorker(int id) {
+        workerRepo.deleteWorker(id);
+    }
+
+    public void showWorkers() {
+        List<Worker> workers = workerRepo.getAllWorkers();
+        workers.forEach(System.out::println);
+    }
+
+    // Task
+    public void addTask(int workerId, String title, String description, LocalDate deadline) {
+        taskRepo.addTask(new Task(workerId, title, description, deadline, "Pending"));
+    }
+
+    public void deleteTask(int id) {
+        taskRepo.deleteTask(id);
+    }
+
+    public void updateTaskStatus(int taskId, String status) {
+        taskRepo.updateTaskStatus(taskId, status);
+    }
+
+    public void showTasks() {
+        List<Task> tasks = taskRepo.getAllTasks();
+        tasks.forEach(System.out::println);
+    }
+}
